@@ -29,9 +29,7 @@ public class RollManager {
     private double stepHeightInitial = -1.0;
     private double newStepHeight;
     private double stepHeightBoost = 0.6;
-    //private static final UUID COVERED_ARMOR_MODIFIER_UUID = UUID.fromString("7E0292F2-9434-48D5-A29F-9583AF7DF27F");
-    //private static final AttributeModifier COVERED_ARMOR_MODIFIER = new AttributeModifier(COVERED_ARMOR_MODIFIER_UUID, "Covered armor bonus", 20.0D, AttributeModifier.Operation.ADDITION);
-
+    
     public RollManager() { }
 
     public record CooldownInfo(int elapsed, int total, int availableRolls, int maxRolls) { }
