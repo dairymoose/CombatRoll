@@ -30,5 +30,7 @@
   "text.autoconfig.combatroll.option.client.showHUDInCreative" : "Show Arrow in Creative mode",
   "text.autoconfig.combatroll.option.client.showWhenFull" : "Show Arrow when full",
   "text.autoconfig.combatroll.option.client.showKeybinding" : "Show keybinding on HUD",
-  "text.autoconfig.combatroll.option.client.keybindingLabelPosition" : "Keybinding label position"
+  "text.autoconfig.combatroll.option.client.keybindingLabelPosition" : "Keybinding label position",
+  "text.autoconfig.combatroll.option.client.showRollParticles" : "Show roll particles",
+  "text.autoconfig.combatroll.option.client.rollUphill" : "Allow uphill rolling"
 }

@@ -18,4 +18,6 @@ public class ClientConfig implements ConfigData {
     public boolean showKeybinding = true;
     public enum LabelPosition { TOP, LEFT }
     public LabelPosition keybindingLabelPosition = LabelPosition.LEFT;
+    public boolean showRollParticles = true;
+    public boolean rollUphill = true;
 }

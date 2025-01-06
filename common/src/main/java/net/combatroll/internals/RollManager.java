@@ -14,6 +14,8 @@ import net.minecraft.util.Identifier;
 import static net.combatroll.api.EntityAttributes_CombatRoll.Type.COUNT;
 import static net.combatroll.api.EntityAttributes_CombatRoll.Type.RECHARGE;
 
+import java.util.UUID;
+
 public class RollManager {
     public boolean isEnabled = true;
     public static int rollDuration() {
@@ -24,6 +26,11 @@ public class RollManager {
     private int currentCooldownLength = 0;
     private int maxRolls = 1;
     private int availableRolls = 0;
+    private double stepHeightInitial = -1.0;
+    private double newStepHeight;
+    private double stepHeightBoost = 0.6;
+    //private static final UUID COVERED_ARMOR_MODIFIER_UUID = UUID.fromString("7E0292F2-9434-48D5-A29F-9583AF7DF27F");
+    //private static final AttributeModifier COVERED_ARMOR_MODIFIER = new AttributeModifier(COVERED_ARMOR_MODIFIER_UUID, "Covered armor bonus", 20.0D, AttributeModifier.Operation.ADDITION);
 
     public RollManager() { }
 
@@ -50,11 +57,45 @@ public class RollManager {
         availableRolls -= 1;
         timeSinceLastRoll = 0;
         updateCooldownLength(player);
+        
+        if (CombatRollClient.config.rollUphill) {
+    		try {
+    			this.stepHeightInitial = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
+    			this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
+    			player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.newStepHeight);
+    		} catch (Exception ex) {
+    			this.stepHeightInitial = (double) player.getStepHeight();
+        		this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
+        		player.setStepHeight((float) this.newStepHeight);
+    		}
+    	}
     }
 
     public void tick(ClientPlayerEntity player) {
         maxRolls = (int) EntityAttributes_CombatRoll.getAttributeValue(player, COUNT);
         timeSinceLastRoll += 1;
+        
+        if (!isRolling()) {
+        	if (stepHeightInitial >= 0.0f) {
+        		double stepHeightCurrent;
+        		try {
+        			stepHeightCurrent = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
+        		} catch (Exception ex) {
+        			stepHeightCurrent = (double) player.getStepHeight();
+        		}
+
+        		if (stepHeightCurrent == newStepHeight) {
+        			try {
+            			player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.stepHeightInitial);
+            		} catch (Exception ex) {
+            			player.setStepHeight((float) this.stepHeightInitial);
+            		}
+        			
+        			this.stepHeightInitial = -1.0;
+        		}
+        	}
+        }
+        
         if (availableRolls < maxRolls) {
             currentCooldownProgress += 1;
             if (currentCooldownProgress >= currentCooldownLength) {

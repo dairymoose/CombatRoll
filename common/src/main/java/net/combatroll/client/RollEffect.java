@@ -25,7 +25,8 @@ public record RollEffect(Visuals visuals, String soundId) {
                 player.getWorld().playSound(player.getX(), player.getY(), player.getZ(), sound, SoundCategory.PLAYERS, 1, 1, true);
             }
         }
-        switch (visuals.particles()) {
+        if (CombatRollClient.config.showRollParticles) {
+        	switch (visuals.particles()) {
             case PUFF -> {
                 for(int i = 0; i < 15; ++i) {
                     double d = random.nextGaussian() * 0.02;
@@ -37,6 +38,7 @@ public record RollEffect(Visuals visuals, String soundId) {
                             player.getParticleZ(1.5), d, e, f);
                 }
             }
+        }
         }
     }
 }
