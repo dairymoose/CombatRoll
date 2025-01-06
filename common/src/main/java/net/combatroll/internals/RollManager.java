@@ -14,8 +14,6 @@ import net.minecraft.util.Identifier;
 import static net.combatroll.api.EntityAttributes_CombatRoll.Type.COUNT;
 import static net.combatroll.api.EntityAttributes_CombatRoll.Type.RECHARGE;
 
-import java.util.UUID;
-
 public class RollManager {
     public boolean isEnabled = true;
     public static int rollDuration() {
@@ -57,16 +55,16 @@ public class RollManager {
         updateCooldownLength(player);
         
         if (CombatRollClient.config.rollUphill) {
-    		try {
-    			this.stepHeightInitial = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
-    			this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
-    			player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.newStepHeight);
-    		} catch (Exception ex) {
-    			this.stepHeightInitial = (double) player.getStepHeight();
-        		this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
-        		player.setStepHeight((float) this.newStepHeight);
-    		}
-    	}
+            try {
+                this.stepHeightInitial = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
+                this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
+                player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.newStepHeight);
+            } catch (Exception ex) {
+                this.stepHeightInitial = (double) player.getStepHeight();
+                this.newStepHeight = this.stepHeightInitial + stepHeightBoost;
+                player.setStepHeight((float) this.newStepHeight);
+            }
+        }
     }
 
     public void tick(ClientPlayerEntity player) {
@@ -74,24 +72,24 @@ public class RollManager {
         timeSinceLastRoll += 1;
         
         if (!isRolling()) {
-        	if (stepHeightInitial >= 0.0f) {
-        		double stepHeightCurrent;
-        		try {
-        			stepHeightCurrent = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
-        		} catch (Exception ex) {
-        			stepHeightCurrent = (double) player.getStepHeight();
-        		}
+            if (stepHeightInitial >= 0.0f) {
+                double stepHeightCurrent;
+                try {
+                    stepHeightCurrent = player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).getBaseValue();
+                } catch (Exception ex) {
+                    stepHeightCurrent = (double) player.getStepHeight();
+                }
 
-        		if (stepHeightCurrent == newStepHeight) {
-        			try {
-            			player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.stepHeightInitial);
-            		} catch (Exception ex) {
-            			player.setStepHeight((float) this.stepHeightInitial);
-            		}
-        			
-        			this.stepHeightInitial = -1.0;
-        		}
-        	}
+                if (stepHeightCurrent == newStepHeight) {
+                    try {
+                        player.getAttributeInstance(Registries.ATTRIBUTE.get(new Identifier("forge:step_height_addition"))).setBaseValue(this.stepHeightInitial);
+                    } catch (Exception ex) {
+                        player.setStepHeight((float) this.stepHeightInitial);
+                    }
+                    
+                    this.stepHeightInitial = -1.0;
+                }
+            }
         }
         
         if (availableRolls < maxRolls) {
